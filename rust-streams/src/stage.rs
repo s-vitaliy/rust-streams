@@ -1,3 +1,5 @@
+use crate::interpreter::GraphInterpreter;
+
 pub fn test_f() -> (){
     print!("Test")
 }
@@ -10,8 +12,16 @@ struct Attributes {
 
 }
 
-pub trait GraphStageLogic {
+#[derive(Debug)]
+pub struct GraphStageLogicError {
 
+}
+
+pub trait GraphStageLogic {
+    fn set_id(&self, id: usize);
+    fn set_interpreter(&self, interpreter: &dyn GraphInterpreter);
+    fn before_pre_start(&self) -> Result<(), GraphStageLogicError>;
+    fn pre_start(&self) -> Result<(), GraphStageLogicError>;
 }
 
 pub trait LogicAndMaterializedValue<TMaterialized> {
