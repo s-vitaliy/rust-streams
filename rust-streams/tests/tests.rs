@@ -26,13 +26,11 @@ mod tests {
         mock.expect_set_id().return_const(());
         mock.expect_set_interpreter().return_const(());
 
-        let mut int = GraphInterpreterImpl{
-            sub_fusing_materializer: None,
-            logics: vec![Box::new(mock)],
-            materializer: &MaterializerImpl{}
-        };
-
-        int.init(None);
+        let mut interpreter: GraphInterpreter = GraphInterpreter::new(
+            None, 
+            vec![Box::new(mock)], 
+            &MaterializerImpl{});
+        interpreter.init(None);
     }
 
     #[test]
@@ -43,13 +41,12 @@ mod tests {
         mock.expect_set_interpreter().return_const(());
         mock.expect_fail_stage().with(predicate::eq(GraphStageLogicError{})).return_const(());
 
-        let mut int = GraphInterpreterImpl{
-            sub_fusing_materializer: None,
-            logics: vec![Box::new(mock)],
-            materializer: &MaterializerImpl{}
-        };
+        let mut interpreter: GraphInterpreter = GraphInterpreter::new(
+            None, 
+            vec![Box::new(mock)], 
+            &MaterializerImpl{});
 
-        int.init(None);
+        interpreter.init(None);
     }
 
     #[test]
@@ -61,13 +58,12 @@ mod tests {
         mock.expect_set_interpreter().return_const(());
         mock.expect_fail_stage().with(predicate::eq(GraphStageLogicError{})).return_const(());
 
-        let mut int = GraphInterpreterImpl{
-            sub_fusing_materializer: None,
-            logics: vec![Box::new(mock)],
-            materializer: &MaterializerImpl{}
-        };
+        let mut interpreter: GraphInterpreter = GraphInterpreter::new(
+            None, 
+            vec![Box::new(mock)], 
+            &MaterializerImpl{});
 
-        int.init(None);
+        interpreter.init(None);
     }
 
 }

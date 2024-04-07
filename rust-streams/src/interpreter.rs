@@ -23,22 +23,24 @@ impl GraphAssembly for GraphAssemblyImpl<'_> {
 
 }
 
-pub trait GraphInterpreter<'interpreter> {
-    fn init(&mut self, materializer: Option<&'interpreter dyn Materializer>) -> ();
-    fn execute(&self, event_limit: i32) -> bool;
-    fn is_suspended(&self) -> bool;
-    fn fail_stage(&mut self, error: GraphStageLogicError);
-}
-
-pub struct GraphInterpreterImpl<'interpreter> {
+pub struct GraphInterpreter<'interpreter> {
     pub sub_fusing_materializer: Option<&'interpreter dyn Materializer>,
     pub logics: Vec<Box<dyn GraphStageLogic<'interpreter>>>,
     pub materializer: &'interpreter dyn Materializer,
 }
 
-impl<'a> GraphInterpreter<'a> for GraphInterpreterImpl<'a> {
+impl<'interpreter> GraphInterpreter<'interpreter> {
 
-    fn init(&mut self, materializer: Option<&'a dyn Materializer>) -> () {
+    pub fn new(sub_mat: Option<&'interpreter dyn Materializer>, logics: Vec<Box<dyn GraphStageLogic<'interpreter>>>, materializer: &'interpreter dyn Materializer) -> Self {
+        return GraphInterpreter{
+            sub_fusing_materializer: sub_mat,
+            logics: logics,
+            materializer: materializer
+
+        };
+    }
+
+    pub fn init(&mut self, materializer: Option<&'interpreter dyn Materializer>) -> () {
         self.sub_fusing_materializer = materializer.or(Some(self.materializer));
         
         for i in 0..self.logics.len(){
@@ -51,15 +53,15 @@ impl<'a> GraphInterpreter<'a> for GraphInterpreterImpl<'a> {
         }
     }
 
-    fn fail_stage(&mut self, error: GraphStageLogicError){
+    pub fn fail_stage(&mut self, error: GraphStageLogicError){
         print!("Stage failed with: {:?}", error)
     }
 
-    fn execute(&self, event_limit: i32) -> bool {
+    pub fn execute(&self, event_limit: i32) -> bool {
         todo!()
     }
 
-    fn is_suspended(&self) -> bool {
+    pub fn is_suspended(&self) -> bool {
         todo!()
     }
 }

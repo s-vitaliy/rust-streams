@@ -19,7 +19,7 @@ pub struct GraphStageLogicError {
 
 pub trait GraphStageLogic<'a> {
     fn set_id(&self, id: usize);
-    fn set_interpreter<'b>(&self, interpreter: &dyn GraphInterpreter<'a>);
+    fn set_interpreter<'b>(&self, interpreter: &GraphInterpreter<'a>);
     fn before_pre_start(&self) -> Result<(), GraphStageLogicError>;
     fn pre_start(&self) -> Result<(), GraphStageLogicError>;
     fn fail_stage(&self, error: GraphStageLogicError);
