@@ -32,7 +32,7 @@ pub trait GraphInterpreter<'interpreter> {
 
 pub struct GraphInterpreterImpl<'interpreter> {
     pub sub_fusing_materializer: Option<&'interpreter dyn Materializer>,
-    pub logics: Vec<Box<dyn GraphStageLogic>>,
+    pub logics: Vec<Box<dyn GraphStageLogic<'interpreter>>>,
     pub materializer: &'interpreter dyn Materializer,
 }
 
@@ -40,13 +40,13 @@ impl<'a> GraphInterpreter<'a> for GraphInterpreterImpl<'a> {
 
     fn init(&mut self, materializer: Option<&'a dyn Materializer>) -> () {
         self.sub_fusing_materializer = materializer.or(Some(self.materializer));
-
+        
         for i in 0..self.logics.len(){
             let logic = &self.logics[i];
             logic.set_id(i);
             logic.set_interpreter(self);
             if let Err(error) = logic.before_pre_start().and_then(|_| logic.pre_start()) {
-                self.fail_stage(error);
+                logic.fail_stage(error);
             }
         }
     }

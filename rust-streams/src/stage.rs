@@ -12,16 +12,17 @@ struct Attributes {
 
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct GraphStageLogicError {
 
 }
 
-pub trait GraphStageLogic {
+pub trait GraphStageLogic<'a> {
     fn set_id(&self, id: usize);
-    fn set_interpreter(&self, interpreter: &dyn GraphInterpreter);
+    fn set_interpreter<'b>(&self, interpreter: &dyn GraphInterpreter<'a>);
     fn before_pre_start(&self) -> Result<(), GraphStageLogicError>;
     fn pre_start(&self) -> Result<(), GraphStageLogicError>;
+    fn fail_stage(&self, error: GraphStageLogicError);
 }
 
 pub trait LogicAndMaterializedValue<TMaterialized> {
